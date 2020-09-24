@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "820516940094",
+    "firebase_url": "https://snap-cad.firebaseio.com",
+    "project_id": "snap-cad",
+    "storage_bucket": "snap-cad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820516940094:android:4fb52cf122aa94a755646f",
+        "android_client_info": {
+          "package_name": "com.arkees.snapcad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820516940094-nkrba1bvk6esbbah4bksphiu2vr6kn57.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arkees.snapcad",
+            "certificate_hash": "9cb8d4d88d94bd135145fba1d8d87632df8d734e"
+          }
+        },
+        {
+          "client_id": "820516940094-at7ugviru0snlem8hk8se9gg77o83pvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvJdxUyrox_yjTIrul_u_Yp8AdQRdNBv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820516940094-at7ugviru0snlem8hk8se9gg77o83pvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
