@@ -4,10 +4,58 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../providers/projects.dart';
 
-class ProjectVideoScreen extends StatelessWidget {
+class ProjectVideoScreen extends StatefulWidget {
 // final String title;
 
   static const routeName = '/project-video';
+
+  @override
+  _ProjectVideoScreenState createState() => _ProjectVideoScreenState();
+}
+
+class _ProjectVideoScreenState extends State<ProjectVideoScreen> {
+  YoutubePlayerController _controller;
+  bool _isPlayerReady = false;
+  PlayerState _playerState; // = PlayerState.unStarted;
+
+  @override
+  void initState() {
+    super.initState();
+    this._playerState = PlayerState.playing;
+    // this._controller = YoutubePlayerController(
+    //   initialVideoId: 'lgkZC_Ss6YE',
+    //   flags: YoutubePlayerFlags(
+    //     mute: false,
+    //     autoPlay: true,
+    //     disableDragSeek: true,
+    //     loop: false,
+    //     isLive: false,
+    //     //forceHideAnnotation: true,
+    //     forceHD: false,
+    //     enableCaption: true,
+    //   ),
+    // )..addListener(_videoPlayerListner);
+  }
+
+  void _videoPlayerListner() {
+    //if (_isPlayerReady) {
+    setState(() {
+      _playerState = _controller.value.playerState;
+    });
+    //}
+  }
+
+  @override
+  void deactivate() {
+    _controller.pause();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,26 +72,22 @@ class ProjectVideoScreen extends StatelessWidget {
         child: Text('Unable to load video'),
       );
     }
-    YoutubePlayerController _controller = YoutubePlayerController(
+    this._controller = YoutubePlayerController(
         initialVideoId: videoId,
         flags: YoutubePlayerFlags(
-          autoPlay: false,
+          autoPlay: true,
           mute: false,
-        ));
+        ))
+      ..addListener(_videoPlayerListner);
 
-    return Scaffold(
+    return YoutubePlayer(
       // appBar: AppBar(
       //   title: Text(loadedProject.title),
       // ),
-      body: _controller != null
-          ? YoutubePlayer(
-              controller: _controller,
-              showVideoProgressIndicator: true,
-              progressIndicatorColor: Colors.purpleAccent,
-            )
-          : Center(
-              child: Text('Unable to load video'),
-            ),
+
+      controller: _controller,
+      showVideoProgressIndicator: true,
+      progressIndicatorColor: Colors.purpleAccent,
 
       //HtmlWidget(
       //     '''
@@ -53,6 +97,10 @@ class ProjectVideoScreen extends StatelessWidget {
       //  ''',
       //     webView: true,
       //   ),
+      onReady: () {
+        _isPlayerReady = true;
+      },
+      onEnded: (data) {},
     );
   }
 }
