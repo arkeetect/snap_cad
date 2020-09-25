@@ -93,7 +93,7 @@ class Projects with ChangeNotifier {
           id: projId,
           title: projData['title'],
           description: projData['description'],
-          price: projData['price'],
+          category: projData['category'],
           isFavorite: false,
           imageUrl: projData['imageUrl'],
           url: projData['url'],
@@ -116,7 +116,7 @@ class Projects with ChangeNotifier {
           'title': project.title,
           'description': project.description,
           'imageUrl': project.imageUrl,
-          'price': project.price,
+          'category': project.category,
           //'creatorId': userId,
           'url': project.url,
         }),
@@ -124,7 +124,7 @@ class Projects with ChangeNotifier {
       final newProject = Project(
         title: project.title,
         description: project.description,
-        price: project.price,
+        category: project.category,
         imageUrl: project.imageUrl,
         id: json.decode(response.body)['name'],
         url: project.url,
@@ -148,7 +148,7 @@ class Projects with ChangeNotifier {
             'title': newProject.title,
             'description': newProject.description,
             'imageUrl': newProject.imageUrl,
-            'price': newProject.price
+            'category': newProject.category
           }));
       _items[prodIndex] = newProject;
       notifyListeners();

@@ -7,7 +7,7 @@ class Project with ChangeNotifier {
   final String id;
   final String title;
   final String description;
-  final double price;
+  final String category;
   final String imageUrl;
   final String url;
   bool isFavorite;
@@ -16,7 +16,7 @@ class Project with ChangeNotifier {
     @required this.id,
     @required this.title,
     @required this.description,
-    @required this.price,
+    @required this.category,
     @required this.imageUrl,
     @required this.url,
     this.isFavorite = false,

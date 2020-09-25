@@ -6,9 +6,7 @@ import '../providers/projects.dart';
 
 class ProjectVideoScreen extends StatelessWidget {
 // final String title;
-  // final double price;
 
-  // ProjectDetailScreen(this.title, this.price);
   static const routeName = '/project-video';
 
   @override
@@ -26,19 +24,18 @@ class ProjectVideoScreen extends StatelessWidget {
         child: Text('Unable to load video'),
       );
     }
-      YoutubePlayerController _controller = YoutubePlayerController(
-          initialVideoId: videoId,
-          flags: YoutubePlayerFlags(
-            autoPlay: false,
-            mute: false,
-          ));
+    YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ));
 
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(loadedProject.title),
       // ),
       body: _controller != null
-
           ? YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,

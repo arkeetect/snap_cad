@@ -4,10 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/projects.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
-  // final String title;
-  // final double price;
-
-  // ProjectDetailScreen(this.title, this.price);
   static const routeName = '/project-detail';
 
   @override
@@ -43,7 +39,7 @@ class ProjectDetailScreen extends StatelessWidget {
               [
                 SizedBox(height: 10),
                 Text(
-                  '\$${loadedProject.price}',
+                  '\$${loadedProject.category}',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 20,

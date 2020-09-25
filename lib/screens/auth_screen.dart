@@ -47,7 +47,7 @@ class AuthScreen extends StatelessWidget {
                       margin: EdgeInsets.only(bottom: 20.0),
                       padding:
                           EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
+                      transform: Matrix4.rotationZ(-20 * pi / 180)
                         ..translate(-10.0),
                       // ..translate(-10.0),
                       decoration: BoxDecoration(
@@ -66,7 +66,7 @@ class AuthScreen extends StatelessWidget {
                         style: TextStyle(
                           color:
                               Theme.of(context).accentTextTheme.headline6.color,
-                          fontSize: 50,
+                          fontSize: 40,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
                         ),
@@ -189,10 +189,10 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _authMode == AuthMode.Signup ? 320 : 100,
         // height: _heightAnimation.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 100),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -201,7 +201,7 @@ class _AuthCardState extends State<AuthCard>
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 if (_isLoading)
                   CircularProgressIndicator()

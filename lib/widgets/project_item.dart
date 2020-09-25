@@ -15,7 +15,7 @@ class ProjectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Project>(context, listen: false);
+    final project = Provider.of<Project>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     final authData = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
@@ -25,15 +25,15 @@ class ProjectItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProjectVideoScreen.routeName,
-              arguments: product.id,
+              arguments: project.id,
             );
           },
           child: Hero(
-            tag: product.id,
+            tag: project.id,
             child: FadeInImage(
               placeholder:
                   AssetImage('assets/images/quentin-grignet-unsplash.jpg'),
-              image: NetworkImage(product.imageUrl),
+              image: NetworkImage(project.imageUrl),
               fit: BoxFit.cover,
             ),
           ),
@@ -41,13 +41,13 @@ class ProjectItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Project>(
-            builder: (ctx, product, _) => IconButton(
+            builder: (ctx, project, _) => IconButton(
               icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                project.isFavorite ? Icons.favorite : Icons.favorite_border,
               ),
               color: Theme.of(context).accentColor,
               onPressed: () {
-                product.toggleFavoriteStatus(
+                project.toggleFavoriteStatus(
                   authData.token,
                   authData.userId,
                 );
@@ -55,7 +55,7 @@ class ProjectItem extends StatelessWidget {
             ),
           ),
           title: Text(
-            product.title,
+            project.title,
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
@@ -63,7 +63,7 @@ class ProjectItem extends StatelessWidget {
               Icons.shopping_cart,
             ),
             onPressed: () {
-              cart.addItem(product.id, product.price, product.title);
+              cart.addItem(project.id, 0, project.title);
               Scaffold.of(context).hideCurrentSnackBar();
               Scaffold.of(context).showSnackBar(
                 SnackBar(
@@ -74,7 +74,7 @@ class ProjectItem extends StatelessWidget {
                   action: SnackBarAction(
                     label: 'UNDO',
                     onPressed: () {
-                      cart.removeSingleItem(product.id);
+                      cart.removeSingleItem(project.id);
                     },
                   ),
                 ),

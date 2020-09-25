@@ -14,8 +14,8 @@ class Auth with ChangeNotifier {
   Stream<User> get currentUser => authService.currentUser;
 
   bool get isAuth {
-    return token != null;
-    //return true;
+    //return token != null;
+    return true;
   }
 
   String get token {

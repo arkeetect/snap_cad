@@ -22,7 +22,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   var _editedProject = Project(
     id: null,
     title: '',
-    price: 0,
+    category: '',
     description: '',
     imageUrl: '',
     url: '',
@@ -30,7 +30,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   var _initValues = {
     'title': '',
     'description': '',
-    'price': '',
+    'category': '',
     'imageUrl': '',
     'url': '',
   };
@@ -53,7 +53,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
         _initValues = {
           'title': _editedProject.title,
           'description': _editedProject.description,
-          'price': _editedProject.price.toString(),
+          'category': _editedProject.category.toString(),
           // 'imageUrl': _editedProject.imageUrl,
           'imageUrl': '',
         };
@@ -172,7 +172,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       onSaved: (value) {
                         _editedProject = Project(
                             title: value,
-                            price: _editedProject.price,
+                            category: _editedProject.category,
                             description: _editedProject.description,
                             imageUrl: _editedProject.imageUrl,
                             id: _editedProject.id,
@@ -181,10 +181,10 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       },
                     ),
                     TextFormField(
-                      initialValue: _initValues['price'],
-                      decoration: InputDecoration(labelText: 'Price'),
+                      initialValue: _initValues['category'],
+                      decoration: InputDecoration(labelText: 'Category'),
                       textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       focusNode: _priceFocusNode,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context)
@@ -192,20 +192,14 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       },
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter a price.';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Please enter a valid number.';
-                        }
-                        if (double.parse(value) <= 0) {
-                          return 'Please enter a number greater than zero.';
+                          return 'Please enter a category.';
                         }
                         return null;
                       },
                       onSaved: (value) {
                         _editedProject = Project(
                             title: _editedProject.title,
-                            price: double.parse(value),
+                            category: value,
                             description: _editedProject.description,
                             imageUrl: _editedProject.imageUrl,
                             id: _editedProject.id,
@@ -231,7 +225,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       onSaved: (value) {
                         _editedProject = Project(
                           title: _editedProject.title,
-                          price: _editedProject.price,
+                          category: _editedProject.category,
                           description: value,
                           imageUrl: _editedProject.imageUrl,
                           id: _editedProject.id,
@@ -293,7 +287,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                             onSaved: (value) {
                               _editedProject = Project(
                                 title: _editedProject.title,
-                                price: _editedProject.price,
+                                category: _editedProject.category,
                                 description: _editedProject.description,
                                 imageUrl: value,
                                 id: _editedProject.id,
