@@ -34,7 +34,7 @@ class ProjectVideoScreen extends StatelessWidget {
         child: RaisedButton(
           onPressed: () async {
             if (await canLaunch(loadedProject.url)) {
-              await launch(loadedProject.url, forceWebView: true);
+              await launch(loadedProject.url);
             } else {
               print('Could not launch ${loadedProject.url}');
             }
