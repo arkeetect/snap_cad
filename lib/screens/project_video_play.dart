@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_youtube_view/flutter_youtube_view.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../providers/projects.dart';
 
@@ -20,28 +21,39 @@ class ProjectVideoScreen extends StatelessWidget {
     print(
       loadedProject.url,
     );
+
+    // find a variable length hex value at the beginning of the line
+    //final regexp = RegExp(r'.*\\?v=(.+?)&.+');
+
+// find the first match though you could also do `allMatches`
+    //final matched = regexp.firstMatch(loadedProject.url);
+    final _videoId = YoutubePlayer.convertUrlToId(loadedProject.url);
+    //print('video Id:' + _videoId);
+    //FlutterYoutubeViewController _controller;
     //final videoId = YoutubePlayer.convertUrlToId(loadedProject.url);
     // if (videoId == null) {
     //   return Center(
     //     child: Text('Unable to load video'),
     //   );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Start watching ${loadedProject.title}'),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () async {
-            if (await canLaunch(loadedProject.url)) {
-              await launch(loadedProject.url);
-            } else {
-              print('Could not launch ${loadedProject.url}');
-            }
-          },
-          child: Text('Play'),
-        ),
-      ),
-    );
+    return _videoId == null
+        ? Container()
+        : Container(
+            child: FlutterYoutubeView(
+                onViewCreated: _onYoutubeCreated,
+                //listener: this,
+                scaleMode:
+                    YoutubeScaleMode.none, // <option> fitWidth, fitHeight
+                params: YoutubeParam(
+                    videoId: _videoId,
+                    showUI: true,
+                    startSeconds: 0.0, // <option>
+                    autoPlay: true,
+                    showFullScreen: true) // <option>
+                ));
+  }
+
+  _onYoutubeCreated(controller) async {
+    await controller.play();
   }
 }
