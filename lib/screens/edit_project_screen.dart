@@ -1,5 +1,9 @@
+// ignore: avoid_web_libraries_in_flutter
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../providers/project.dart';
 import '../providers/projects.dart';
@@ -17,7 +21,9 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   final _imageUrlController = TextEditingController(
       text:
           'https://cdn.pixabay.com/photo/2017/02/01/13/45/technical-drawing-2030247_1280.jpg');
+  final _urlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
+  final _urlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _editedProject = Project(
     id: null,
@@ -40,6 +46,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
+    _urlFocusNode.addListener(_updateUrl);
     super.initState();
   }
 
@@ -56,8 +63,10 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
           'category': _editedProject.category.toString(),
           // 'imageUrl': _editedProject.imageUrl,
           'imageUrl': '',
+          'url': '',
         };
         _imageUrlController.text = _editedProject.imageUrl;
+        _urlController.text = _editedProject.url;
       }
     }
     _isInit = false;
@@ -66,10 +75,12 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
 
   @override
   void dispose() {
+    _urlFocusNode.removeListener(_updateUrl);
     _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _descriptionFocusNode.dispose();
     _imageUrlController.dispose();
+    _urlController.dispose();
     _imageUrlFocusNode.dispose();
     super.dispose();
   }
@@ -84,6 +95,27 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
         return;
       }
       setState(() {});
+    }
+  }
+
+  void _updateUrl() {
+    if (!_urlFocusNode.hasFocus) {
+      if ((!_urlController.text.startsWith('http') &&
+          !_urlController.text.startsWith('https'))) {
+        return;
+      }
+      _imageUrlController.text = _fetchThumbnail(_urlController.text);
+      setState(() {});
+    }
+  }
+
+  _fetchThumbnail(String value) {
+    if (value.length > 0) {
+      final videoId = YoutubePlayer.convertUrlToId(value);
+      final thumbNail =
+          YoutubePlayer.getThumbnail(videoId: videoId, webp: false);
+      _imageUrlController.text = thumbNail;
+      return thumbNail;
     }
   }
 
@@ -187,8 +219,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                       keyboardType: TextInputType.text,
                       focusNode: _priceFocusNode,
                       onFieldSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(_descriptionFocusNode);
+                        FocusScope.of(context).requestFocus(_urlFocusNode);
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -205,6 +236,35 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                             id: _editedProject.id,
                             isFavorite: _editedProject.isFavorite,
                             url: _editedProject.url);
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: null,
+                      decoration: InputDecoration(labelText: 'Youtube URL'),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.text,
+                      controller: _urlController,
+                      focusNode: _urlFocusNode,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                        FocusScope.of(context)
+                            .requestFocus(_descriptionFocusNode);
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a Youtube URL.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _editedProject = Project(
+                            title: _editedProject.title,
+                            category: _editedProject.category,
+                            description: _editedProject.description,
+                            imageUrl: _fetchThumbnail(value),
+                            id: _editedProject.id,
+                            isFavorite: _editedProject.isFavorite,
+                            url: value);
                       },
                     ),
                     TextFormField(
@@ -251,7 +311,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                             ),
                           ),
                           child: _imageUrlController.text.isEmpty
-                              ? Text('Enter a URL')
+                              ? Text('Enter an image URL')
                               : FittedBox(
                                   child: Image.network(
                                     _imageUrlController.text,
@@ -261,7 +321,8 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                         ),
                         Expanded(
                           child: TextFormField(
-                            decoration: InputDecoration(labelText: 'Image URL'),
+                            decoration: InputDecoration(
+                                labelText: 'Image URL (auto generated)'),
                             keyboardType: TextInputType.url,
                             textInputAction: TextInputAction.done,
                             controller: _imageUrlController,

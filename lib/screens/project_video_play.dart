@@ -28,6 +28,7 @@ class ProjectVideoScreen extends StatelessWidget {
 // find the first match though you could also do `allMatches`
     //final matched = regexp.firstMatch(loadedProject.url);
     final _videoId = YoutubePlayer.convertUrlToId(loadedProject.url);
+    YoutubePlayer.getThumbnail(videoId: loadedProject.url, webp: false);
     //print('video Id:' + _videoId);
     //FlutterYoutubeViewController _controller;
     //final videoId = YoutubePlayer.convertUrlToId(loadedProject.url);
