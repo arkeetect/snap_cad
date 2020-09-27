@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/project_video_play.dart';
 import '../providers/project.dart';
-import '../providers/cart.dart';
+//import '../providers/cart.dart';
 import '../providers/auth.dart';
 
 class ProjectItem extends StatelessWidget {
@@ -16,13 +16,14 @@ class ProjectItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final project = Provider.of<Project>(context, listen: false);
-    final cart = Provider.of<Cart>(context, listen: false);
+    //final cart = Provider.of<Cart>(context, listen: false);
     final authData = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
           onTap: () {
+            project.setIsViewed(authData.token, authData.userId);
             Navigator.of(context).pushNamed(
               ProjectVideoScreen.routeName,
               arguments: project.id,
@@ -56,32 +57,34 @@ class ProjectItem extends StatelessWidget {
           ),
           title: Text(
             project.title,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
+            textWidthBasis: TextWidthBasis.longestLine,
+            //textScaleFactor: 0.9,
           ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-            ),
-            onPressed: () {
-              cart.addItem(project.id, 0, project.title);
-              Scaffold.of(context).hideCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Added item to cart!',
-                  ),
-                  duration: Duration(seconds: 2),
-                  action: SnackBarAction(
-                    label: 'UNDO',
-                    onPressed: () {
-                      cart.removeSingleItem(project.id);
-                    },
-                  ),
-                ),
-              );
-            },
-            color: Theme.of(context).accentColor,
-          ),
+          // trailing: IconButton(
+          //   icon: Icon(
+          //     Icons.bookmark,
+          //   ),
+          //   onPressed: () {
+          //     cart.addItem(project.id, 0, project.title);
+          //     Scaffold.of(context).hideCurrentSnackBar();
+          //     Scaffold.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: Text(
+          //           'Bookmarked!',
+          //         ),
+          //         duration: Duration(seconds: 2),
+          //         action: SnackBarAction(
+          //           label: 'UNDO',
+          //           onPressed: () {
+          //             cart.removeSingleItem(project.id);
+          //           },
+          //         ),
+          //       ),
+          //     );
+          //   },
+          //   color: Theme.of(context).accentColor,
+          // ),
         ),
       ),
     );

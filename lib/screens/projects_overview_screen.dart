@@ -9,6 +9,7 @@ import '../providers/projects.dart';
 
 enum FilterOptions {
   Favorites,
+  Recent,
   All,
 }
 
@@ -70,6 +71,10 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
               PopupMenuItem(
                 child: Text('Only Favorites'),
                 value: FilterOptions.Favorites,
+              ),
+              PopupMenuItem(
+                child: Text('Recently Viewed'),
+                value: FilterOptions.Recent,
               ),
               PopupMenuItem(
                 child: Text('Show All'),

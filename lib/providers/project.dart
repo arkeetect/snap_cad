@@ -11,6 +11,8 @@ class Project with ChangeNotifier {
   final String imageUrl;
   final String url;
   bool isFavorite;
+  bool isViewed;
+  //DateTime dateViewed;
 
   Project({
     @required this.id,
@@ -20,11 +22,41 @@ class Project with ChangeNotifier {
     @required this.imageUrl,
     @required this.url,
     this.isFavorite = false,
+    this.isViewed = false,
+    //this.dateViewed,
   });
 
   void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();
+  }
+
+  void _setViewed(bool value) {
+    isViewed = value;
+    notifyListeners();
+  }
+
+  Future<void> setIsViewed(String token, String userId) async {
+    isViewed = true;
+    final dateViewed = DateTime.now().toUtc().toString();
+    notifyListeners();
+    final url = 'https://snap-cad.firebaseio.com/userViewed/$userId/$id.json';
+    //'https://snap-cad.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
+
+    try {
+      final response = await http.put(
+        url,
+        body: json.encode({
+          'id': id,
+          'dateViewed': dateViewed,
+        }),
+      );
+      if (response.statusCode >= 400) {
+        _setViewed(false);
+      }
+    } catch (error) {
+      _setViewed(false);
+    }
   }
 
   Future<void> toggleFavoriteStatus(String token, String userId) async {

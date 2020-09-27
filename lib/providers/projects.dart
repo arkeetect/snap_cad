@@ -148,7 +148,8 @@ class Projects with ChangeNotifier {
             'title': newProject.title,
             'description': newProject.description,
             'imageUrl': newProject.imageUrl,
-            'category': newProject.category
+            'category': newProject.category,
+            //'viewedDate': newProject.isViewed ?? DateTime.now(),
           }));
       _items[prodIndex] = newProject;
       notifyListeners();
