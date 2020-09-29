@@ -9,7 +9,8 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: SingleChildScrollView(
+          child: Column(
         children: <Widget>[
           AppBar(
             title: Text('Main Menu'),
@@ -18,7 +19,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.computer),
-            title: Text('View All'),
+            title: Text(
+              'View All',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
@@ -26,7 +30,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.bookmark_border),
-            title: Text('View 3ds Max'),
+            title: Text(
+              'View 3ds Max',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
@@ -34,7 +41,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.payment),
-            title: Text('Upgrade'),
+            title: Text(
+              'Upgrade',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(OrdersScreen.routeName);
@@ -48,7 +58,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.cloud_upload),
-            title: Text('Manage Projects'),
+            title: Text(
+              'Manage Projects',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(UserProjectsScreen.routeName);
@@ -57,7 +70,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.notifications_active),
-            title: Text('Inbox'),
+            title: Text(
+              'Inbox',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
@@ -65,7 +81,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.youtube_searched_for),
-            title: Text('Search Projects'),
+            title: Text(
+              'Search Projects',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
@@ -73,7 +92,10 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            title: Text(
+              'Logout',
+              style: TextStyle(fontSize: 14, color: Colors.deepOrange),
+            ),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
@@ -84,7 +106,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
         ],
-      ),
+      )),
     );
   }
 }

@@ -22,6 +22,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
   var _showOnlyFavorites = false;
   var _isInit = true;
   var _isLoading = false;
+  var _showRecent = false;
 
   @override
   void initState() {
@@ -62,6 +63,11 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
                 } else {
                   _showOnlyFavorites = false;
                 }
+                if (selectedValue == FilterOptions.Recent) {
+                  _showRecent = true;
+                } else {
+                  _showRecent = false;
+                }
               });
             },
             icon: Icon(
@@ -69,15 +75,24 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
             ),
             itemBuilder: (_) => [
               PopupMenuItem(
-                child: Text('Only Favorites'),
+                child: Text(
+                  'Only Favorites',
+                  style: TextStyle(fontSize: 14, color: Colors.purple),
+                ),
                 value: FilterOptions.Favorites,
               ),
               PopupMenuItem(
-                child: Text('Recently Viewed'),
+                child: Text(
+                  'Recently Viewed',
+                  style: TextStyle(fontSize: 14, color: Colors.purple),
+                ),
                 value: FilterOptions.Recent,
               ),
               PopupMenuItem(
-                child: Text('Show All'),
+                child: Text(
+                  'Show All',
+                  style: TextStyle(fontSize: 14, color: Colors.purple),
+                ),
                 value: FilterOptions.All,
               ),
             ],
@@ -103,7 +118,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ProjectsGrid(_showOnlyFavorites),
+          : ProjectsGrid(_showOnlyFavorites, _showRecent),
     );
   }
 }

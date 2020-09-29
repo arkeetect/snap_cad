@@ -6,13 +6,17 @@ import 'project_item.dart';
 
 class ProjectsGrid extends StatelessWidget {
   final bool showFavs;
+  final bool showRecent;
 
-  ProjectsGrid(this.showFavs);
+  ProjectsGrid(this.showFavs, this.showRecent);
 
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Projects>(context);
-    final products = showFavs ? productsData.favoriteItems : productsData.items;
+    final products = showFavs
+        ? productsData.favoriteItems
+        : showRecent ? productsData.recentItems : productsData.items;
+
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: products.length,

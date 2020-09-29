@@ -58,6 +58,10 @@ class Projects with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
+  List<Project> get recentItems {
+    return _items.where((prodItem) => prodItem.isViewed).toList();
+  }
+
   Project findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }

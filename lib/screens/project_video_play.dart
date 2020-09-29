@@ -39,19 +39,25 @@ class ProjectVideoScreen extends StatelessWidget {
 
     return _videoId == null
         ? Container()
-        : Container(
-            child: FlutterYoutubeView(
-                onViewCreated: _onYoutubeCreated,
-                //listener: this,
-                scaleMode:
-                    YoutubeScaleMode.none, // <option> fitWidth, fitHeight
-                params: YoutubeParam(
-                    videoId: _videoId,
-                    showUI: true,
-                    startSeconds: 0.0, // <option>
-                    autoPlay: true,
-                    showFullScreen: true) // <option>
-                ));
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text(''),
+              actions: <Widget>[],
+            ),
+            //drawer: AppDrawer(),
+            body: Container(
+                child: FlutterYoutubeView(
+                    onViewCreated: _onYoutubeCreated,
+                    //listener: this,
+                    scaleMode:
+                        YoutubeScaleMode.none, // <option> fitWidth, fitHeight
+                    params: YoutubeParam(
+                        videoId: _videoId,
+                        showUI: true,
+                        startSeconds: 0.0, // <option>
+                        autoPlay: true,
+                        showFullScreen: true) // <option>
+                    )));
   }
 
   _onYoutubeCreated(controller) async {

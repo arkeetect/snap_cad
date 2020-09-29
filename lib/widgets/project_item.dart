@@ -18,12 +18,13 @@ class ProjectItem extends StatelessWidget {
     final project = Provider.of<Project>(context, listen: false);
     //final cart = Provider.of<Cart>(context, listen: false);
     final authData = Provider.of<Auth>(context, listen: false);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-            project.setIsViewed(authData.token, authData.userId);
+            project.setIsViewedInPerfs(authData.token, authData.userId);
             Navigator.of(context).pushNamed(
               ProjectVideoScreen.routeName,
               arguments: project.id,
@@ -39,52 +40,61 @@ class ProjectItem extends StatelessWidget {
             ),
           ),
         ),
-        footer: GridTileBar(
-          backgroundColor: Colors.black87,
-          leading: Consumer<Project>(
-            builder: (ctx, project, _) => IconButton(
-              icon: Icon(
-                project.isFavorite ? Icons.favorite : Icons.favorite_border,
+        footer: Container(
+          height: 25,
+          child: GridTileBar(
+            backgroundColor: Colors.purple,
+            leading: Consumer<Project>(
+              builder: (ctx, project, _) => IconButton(
+                iconSize: 20,
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  project.isFavorite ? Icons.favorite : Icons.favorite_border,
+                ),
+                color: Theme.of(context).accentColor,
+                onPressed: () {
+                  project.toggleFavorite(
+                    authData.token,
+                    authData.userId,
+                  );
+                },
               ),
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                project.toggleFavoriteStatus(
-                  authData.token,
-                  authData.userId,
-                );
-              },
             ),
+            title: Text(
+              project.title,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
+              textWidthBasis: TextWidthBasis.longestLine,
+              //textScaleFactor: 0.9,
+            ),
+            // trailing: IconButton(
+            //   icon: Icon(
+            //     Icons.bookmark,
+            //   ),
+            //   onPressed: () {
+            //     cart.addItem(project.id, 0, project.title);
+            //     Scaffold.of(context).hideCurrentSnackBar();
+            //     Scaffold.of(context).showSnackBar(
+            //       SnackBar(
+            //         content: Text(
+            //           'Bookmarked!',
+            //         ),
+            //         duration: Duration(seconds: 2),
+            //         action: SnackBarAction(
+            //           label: 'UNDO',
+            //           onPressed: () {
+            //             cart.removeSingleItem(project.id);
+            //           },
+            //         ),
+            //       ),
+            //     );
+            //   },
+            //   color: Theme.of(context).accentColor,
+            // ),
           ),
-          title: Text(
-            project.title,
-            textAlign: TextAlign.left,
-            textWidthBasis: TextWidthBasis.longestLine,
-            //textScaleFactor: 0.9,
-          ),
-          // trailing: IconButton(
-          //   icon: Icon(
-          //     Icons.bookmark,
-          //   ),
-          //   onPressed: () {
-          //     cart.addItem(project.id, 0, project.title);
-          //     Scaffold.of(context).hideCurrentSnackBar();
-          //     Scaffold.of(context).showSnackBar(
-          //       SnackBar(
-          //         content: Text(
-          //           'Bookmarked!',
-          //         ),
-          //         duration: Duration(seconds: 2),
-          //         action: SnackBarAction(
-          //           label: 'UNDO',
-          //           onPressed: () {
-          //             cart.removeSingleItem(project.id);
-          //           },
-          //         ),
-          //       ),
-          //     );
-          //   },
-          //   color: Theme.of(context).accentColor,
-          // ),
         ),
       ),
     );
