@@ -100,7 +100,7 @@ class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  var _isLoading = false;
+  //var _isLoading = false;
   AnimationController _controller;
 
   @override
@@ -141,7 +141,7 @@ class _AuthCardState extends State<AuthCard>
     );
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(Buttons type) async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -152,7 +152,16 @@ class _AuthCardState extends State<AuthCard>
     //});
     try {
       // Log user in
-      await Provider.of<Auth>(context, listen: false).login();
+      switch (type) {
+        case Buttons.Facebook:
+          await Provider.of<Auth>(context, listen: false).loginFb();
+          break;
+        case Buttons.GoogleDark:
+          await Provider.of<Auth>(context, listen: false).loginGoogle();
+          break;
+        default:
+          break;
+      }
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
@@ -187,32 +196,59 @@ class _AuthCardState extends State<AuthCard>
       ),
       elevation: 8.0,
       child: AnimatedContainer(
+        //color: Color.fromRGBO(r, g, b, opacity),
+        alignment: Alignment.topCenter,
+        decoration: BoxDecoration(
+          //gradient: Gradient.lerp(Gradient(), b, t)
+          image: DecorationImage(
+              //padding:
+              image: AssetImage("assets/images/lamp.jpg"),
+              scale: 5.5,
+              fit: BoxFit.none,
+              alignment: Alignment.topLeft),
+        ),
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 100,
+        height: _authMode == AuthMode.Signup ? 320 : 110,
         // height: _heightAnimation.value.height,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 100),
-        width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16.0),
+        width: deviceSize.width * 0.77,
+        padding: EdgeInsets.zero,
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  SignInButton(
-                    Buttons.FacebookNew,
-                    onPressed: () => {_submit()},
-                  ),
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // SizedBox(
+              //   height: 9,
+              // ),
+              // if (_isLoading)
+              //   CircularProgressIndicator()
+              // else
+              Container(
+                  alignment: Alignment.topRight,
+                  margin: EdgeInsets.only(right: 6.0, top: 3.0),
+                  padding: EdgeInsets.zero,
+                  child: SignInButton(
+                    Buttons.Facebook,
+                    //mini: true,
+                    //padding: const EdgeInsets.only(left: 40),
+                    onPressed: () => {_submit(Buttons.Facebook)},
+                  )),
+              Container(
+                  alignment: Alignment.topRight,
+                  margin: EdgeInsets.only(right: 6.0),
+                  padding: EdgeInsets.zero,
+                  child: SignInButton(
+                    Buttons.GoogleDark,
+                    //mini: true,
+                    //padding: const EdgeInsets.only(left: 40),
+                    onPressed: () => {_submit(Buttons.GoogleDark)},
+                  )),
+            ],
           ),
+          //),
         ),
       ),
     );
