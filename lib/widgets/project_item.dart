@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../screens/project_video_play.dart';
 import '../providers/project.dart';
 //import '../providers/cart.dart';
-import '../providers/auth.dart';
+import '../providers/snap_auth.dart';
 
 class ProjectItem extends StatelessWidget {
   // final String id;
@@ -17,7 +17,7 @@ class ProjectItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final project = Provider.of<Project>(context, listen: false);
     //final cart = Provider.of<Cart>(context, listen: false);
-    final authData = Provider.of<Auth>(context, listen: false);
+    final authData = Provider.of<SnapAuth>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),

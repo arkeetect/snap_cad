@@ -20,7 +20,10 @@ class UserProjectsScreen extends StatelessWidget {
     print('rebuilding...');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Projects'),
+        title: const Text(
+          'Manage Projects',
+          textScaleFactor: 0.7,
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),

@@ -9,7 +9,7 @@ import './screens/project_detail_screen.dart';
 import './providers/projects.dart';
 import './providers/cart.dart';
 import './providers/orders.dart';
-import './providers/auth.dart';
+import './providers/snap_auth.dart';
 import './screens/orders_screen.dart';
 import './screens/user_projects_screen.dart';
 import './screens/edit_project_screen.dart';
@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(
-                  value: Auth(),
+                  value: SnapAuth(),
                 ),
-                ChangeNotifierProxyProvider<Auth, Projects>(
+                ChangeNotifierProxyProvider<SnapAuth, Projects>(
                   create: (ctx) => Projects('', '', []),
                   update: (ctx, auth, previousProjects) => Projects(
                     auth.token,
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
                 ChangeNotifierProvider.value(
                   value: Cart(),
                 ),
-                ChangeNotifierProxyProvider<Auth, Orders>(
+                ChangeNotifierProxyProvider<SnapAuth, Orders>(
                   create: (ctx) => Orders('', '', []),
                   update: (ctx, auth, previousOrders) => Orders(
                     auth.token,
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ],
-              child: Consumer<Auth>(
+              child: Consumer<SnapAuth>(
                 builder: (ctx, auth, _) => MaterialApp(
                   title: 'SnapCAD',
                   theme: ThemeData(

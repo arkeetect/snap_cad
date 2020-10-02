@@ -53,7 +53,14 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SnapCAD'),
+        title: Text(
+          'SnapCAD       ' +
+              (_showOnlyFavorites
+                  ? 'Favorites'
+                  : _showRecent ? 'Recently Viewed' : ''),
+          textAlign: TextAlign.left,
+          textScaleFactor: 0.7,
+        ),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
@@ -104,7 +111,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
             ),
             child: IconButton(
               icon: Icon(
-                Icons.search,
+                Icons.message,
               ),
               onPressed: () {
                 Navigator.of(context).pushNamed('/');

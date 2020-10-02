@@ -170,7 +170,10 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Project'),
+        title: Text(
+          'Edit Project',
+          textScaleFactor: 0.7,
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),

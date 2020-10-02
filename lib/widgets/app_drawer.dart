@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/orders_screen.dart';
 import '../screens/user_projects_screen.dart';
-import '../providers/auth.dart';
+import '../providers/snap_auth.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -31,18 +31,27 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.bookmark_border),
             title: Text(
-              'View 3ds Max',
+              '3ds Max Training',
               style: TextStyle(fontSize: 14, color: Colors.purple),
             ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
           ),
-          //Divider(),
+          ListTile(
+            leading: Icon(Icons.youtube_searched_for),
+            title: Text(
+              'Rivete Training',
+              style: TextStyle(fontSize: 14, color: Colors.purple),
+            ),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/');
+            },
+          ), //Divider(),
           ListTile(
             leading: Icon(Icons.payment),
             title: Text(
-              'Upgrade',
+              'AutoCAD Training',
               style: TextStyle(fontSize: 14, color: Colors.purple),
             ),
             onTap: () {
@@ -69,9 +78,9 @@ class AppDrawer extends StatelessWidget {
           ),
           //Divider(),
           ListTile(
-            leading: Icon(Icons.notifications_active),
+            leading: Icon(Icons.message),
             title: Text(
-              'Inbox',
+              'Messages',
               style: TextStyle(fontSize: 14, color: Colors.purple),
             ),
             onTap: () {
@@ -79,16 +88,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           //Divider(),
-          ListTile(
-            leading: Icon(Icons.youtube_searched_for),
-            title: Text(
-              'Search Projects',
-              style: TextStyle(fontSize: 14, color: Colors.purple),
-            ),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
-            },
-          ),
+
           //Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -102,7 +102,7 @@ class AppDrawer extends StatelessWidget {
 
               // Navigator.of(context)
               //     .pushReplacementNamed(UserProjectsScreen.routeName);
-              Provider.of<Auth>(context, listen: false).logout();
+              Provider.of<SnapAuth>(context, listen: false).logout();
             },
           ),
         ],

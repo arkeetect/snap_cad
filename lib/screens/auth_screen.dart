@@ -5,7 +5,7 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth.dart';
+import '../providers/snap_auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -154,10 +154,10 @@ class _AuthCardState extends State<AuthCard>
       // Log user in
       switch (type) {
         case Buttons.Facebook:
-          await Provider.of<Auth>(context, listen: false).loginFb();
+          await Provider.of<SnapAuth>(context, listen: false).loginFb();
           break;
         case Buttons.GoogleDark:
-          await Provider.of<Auth>(context, listen: false).loginGoogle();
+          await Provider.of<SnapAuth>(context, listen: false).loginGoogle();
           break;
         default:
           break;
