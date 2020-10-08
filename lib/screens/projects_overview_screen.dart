@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snap_cad/providers/snap_auth.dart';
 
 import '../widgets/app_drawer.dart';
 import '../widgets/projects_grid.dart';
@@ -14,6 +15,9 @@ enum FilterOptions {
 }
 
 class ProjectsOverviewScreen extends StatefulWidget {
+  final SnapAuth snapAuth;
+
+  ProjectsOverviewScreen(this.snapAuth);
   @override
   _ProjectsOverviewScreenState createState() => _ProjectsOverviewScreenState();
 }
@@ -23,9 +27,17 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
   var _isInit = true;
   var _isLoading = false;
   var _showRecent = false;
+  var _isAdmin = false;
 
   @override
   void initState() {
+    this.widget.snapAuth.currentUser.listen((currentUser) {
+      if (currentUser != null && currentUser.email == 'arkeetect@gmail.com') {
+        _isAdmin = true;
+      } else {
+        _isAdmin = false;
+      }
+    });
     // Provider.of<Projects>(context).fetchAndSetProjects(); // WON'T WORK!
     // Future.delayed(Duration.zero).then((_) {
     //   Provider.of<Projects>(context).fetchAndSetProjects();
@@ -39,7 +51,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Projects>(context).fetchAndSetProjects().then((_) {
+      Provider.of<Projects>(context).fetchProjectsApi().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -83,7 +95,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
             itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text(
-                  'Only Favorites',
+                  'Favorites',
                   style: TextStyle(fontSize: 14, color: Colors.purple),
                 ),
                 value: FilterOptions.Favorites,
@@ -120,7 +132,7 @@ class _ProjectsOverviewScreenState extends State<ProjectsOverviewScreen> {
           ),
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(_isAdmin),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),

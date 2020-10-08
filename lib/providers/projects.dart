@@ -2,11 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:snap_cad/providers/auth_service.dart';
 
 import '../models/http_exception.dart';
 import 'project.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Projects with ChangeNotifier {
+  //final dbRef = FirebaseDatabase.instance;
+  final _authService = AuthService();
+  //final _app = _authService.app;
+
   List<Project> _items = [
     // Project(
     //   id: 'p1',
@@ -76,9 +82,76 @@ class Projects with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  Future<void> fetchProjectsApi([bool filterByUser = false]) async {
+    final dbRef = FirebaseDatabase(app: _authService.app);
+    //databaseURL: 'https://snap-cad.firebaseio.com/projects.json');
+    dbRef.reference().child('projects').once().then((snapshot) {
+      final data =
+          snapshot.value; //json.decode(snapshot.value) as Map<String, dynamic>;
+      if (data == null) {
+        return;
+      }
+      //url =
+      //'https://snap-cad.firebaseio.com/userFavorites/$userId.json';
+      //'https://snap-cad.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      //final favoriteResponse = await http.get(url);
+      //final favoriteData = json.decode(favoriteResponse.body);
+      final List<Project> loadedProjects = [];
+      data.forEach((projId, projData) {
+        loadedProjects.add(Project(
+          id: projId,
+          title: projData['title'],
+          description: projData['description'],
+          category: projData['category'],
+          isFavorite: false,
+          imageUrl: projData['imageUrl'],
+          url: projData['url'],
+        ));
+      });
+      _items = loadedProjects;
+      notifyListeners();
+    });
+
+    //'https://snap-cad.firebaseio.com/projects.json?uid=$userId';
+
+    //filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    //var url = 'https://snap-cad.firebaseio.com/projects.json?auth=$authToken';
+    //var url = 'https://snap-cad.firebaseio.com/projects.json?uid=$userId';
+    //'https://snap-cad.firebaseio.com/projects.json?auth=$authToken&$filterString';
+    // try {
+    //   final response = await http.get(url);
+    //   final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    //   if (extractedData == null) {
+    //     return;
+    //   }
+    //   //url =
+    //   //'https://snap-cad.firebaseio.com/userFavorites/$userId.json';
+    //   //'https://snap-cad.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+    //   //final favoriteResponse = await http.get(url);
+    //   //final favoriteData = json.decode(favoriteResponse.body);
+    //   final List<Project> loadedProjects = [];
+    //   extractedData.forEach((projId, projData) {
+    //     loadedProjects.add(Project(
+    //       id: projId,
+    //       title: projData['title'],
+    //       description: projData['description'],
+    //       category: projData['category'],
+    //       isFavorite: false,
+    //       imageUrl: projData['imageUrl'],
+    //       url: projData['url'],
+    //     ));
+    //   });
+    //   _items = loadedProjects;
+    //   notifyListeners();
+    // } catch (error) {
+    //   throw (error);
+    // }
+  }
+
   Future<void> fetchAndSetProjects([bool filterByUser = false]) async {
     //filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
-    var url = 'https://snap-cad.firebaseio.com/projects.json';
+    //var url = 'https://snap-cad.firebaseio.com/projects.json?auth=$authToken';
+    var url = 'https://snap-cad.firebaseio.com/projects.json?auth=$authToken';
     //'https://snap-cad.firebaseio.com/projects.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(url);
@@ -111,7 +184,7 @@ class Projects with ChangeNotifier {
   }
 
   Future<void> addProject(Project project) async {
-    final url = 'https://snap-cad.firebaseio.com/projects.json';
+    final url = 'https://snap-cad.firebaseio.com/projects.json?auth=$authToken';
     //'https://snap-cad.firebaseio.com/projects.json?auth=$authToken';
     try {
       final response = await http.post(
@@ -145,9 +218,10 @@ class Projects with ChangeNotifier {
   Future<void> updateProject(String id, Project newProject) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://snap-cad.firebaseio.com/projects/$id.json';
-      //'https://snap-cad.firebaseio.com/projects/$id.json?auth=$authToken';
-      await http.patch(url,
+      final url =
+          //'https://snap-cad.firebaseio.com/projects/$id.json?uid=$userId';
+          'https://snap-cad.firebaseio.com/projects/$id.json?auth=$authToken';
+      final response = await http.patch(url,
           body: json.encode({
             'title': newProject.title,
             'description': newProject.description,
@@ -155,6 +229,8 @@ class Projects with ChangeNotifier {
             'category': newProject.category,
             //'viewedDate': newProject.isViewed ?? DateTime.now(),
           }));
+      print(response.statusCode);
+
       _items[prodIndex] = newProject;
       notifyListeners();
     } else {
@@ -163,7 +239,8 @@ class Projects with ChangeNotifier {
   }
 
   Future<void> deleteProject(String id) async {
-    final url = 'https://snap-cad.firebaseio.com/projects/$id.json';
+    final url =
+        'https://snap-cad.firebaseio.com/projects/$id.json?auth=$authToken';
     //'https://snap-cad.firebaseio.com/projects/$id.json?auth=$authToken';
     final existingProjectIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProject = _items[existingProjectIndex];

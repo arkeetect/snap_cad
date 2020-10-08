@@ -100,7 +100,7 @@ class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  //var _isLoading = false;
+  var _isLoading = false;
   AnimationController _controller;
 
   @override
@@ -146,15 +146,25 @@ class _AuthCardState extends State<AuthCard>
       // Invalid!
       return;
     }
-    //_formKey.currentState.save();
-    //setState(() {
-    //_isLoading = true;
-    //});
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
     try {
       // Log user in
       switch (type) {
         case Buttons.Facebook:
-          await Provider.of<SnapAuth>(context, listen: false).loginFb();
+          await Provider.of<SnapAuth>(context, listen: false)
+              .loginFb()
+              .then((_) {
+            setState(() {
+              _isLoading = false;
+            });
+          }).catchError((onError) {
+            const errorMessage =
+                'Could not authenticate you. Please try again later.';
+            _showErrorDialog(errorMessage);
+          });
           break;
         case Buttons.GoogleDark:
           await Provider.of<SnapAuth>(context, listen: false).loginGoogle();
@@ -167,10 +177,6 @@ class _AuthCardState extends State<AuthCard>
           'Could not authenticate you. Please try again later.';
       _showErrorDialog(errorMessage);
     }
-
-    //setState(() {
-    // _isLoading = false;
-    //});
   }
 
   // void _switchAuthMode() {
@@ -217,37 +223,39 @@ class _AuthCardState extends State<AuthCard>
         padding: EdgeInsets.zero,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // SizedBox(
-              //   height: 9,
-              // ),
-              // if (_isLoading)
-              //   CircularProgressIndicator()
-              // else
-              Container(
-                  alignment: Alignment.topRight,
-                  margin: EdgeInsets.only(right: 6.0, top: 3.0),
-                  padding: EdgeInsets.zero,
-                  child: SignInButton(
-                    Buttons.Facebook,
-                    //mini: true,
-                    //padding: const EdgeInsets.only(left: 40),
-                    onPressed: () => {_submit(Buttons.Facebook)},
-                  )),
-              Container(
-                  alignment: Alignment.topRight,
-                  margin: EdgeInsets.only(right: 6.0),
-                  padding: EdgeInsets.zero,
-                  child: SignInButton(
-                    Buttons.GoogleDark,
-                    //mini: true,
-                    //padding: const EdgeInsets.only(left: 40),
-                    onPressed: () => {_submit(Buttons.GoogleDark)},
-                  )),
-            ],
-          ),
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // SizedBox(
+                    //   height: 9,
+                    // ),
+                    // if (_isLoading)
+                    //   CircularProgressIndicator()
+                    // else
+                    Container(
+                        alignment: Alignment.topRight,
+                        margin: EdgeInsets.only(right: 6.0, top: 3.0),
+                        padding: EdgeInsets.zero,
+                        child: SignInButton(
+                          Buttons.Facebook,
+                          //mini: true,
+                          //padding: const EdgeInsets.only(left: 40),
+                          onPressed: () => {_submit(Buttons.Facebook)},
+                        )),
+                    Container(
+                        alignment: Alignment.topRight,
+                        margin: EdgeInsets.only(right: 6.0),
+                        padding: EdgeInsets.zero,
+                        child: SignInButton(
+                          Buttons.GoogleDark,
+                          //mini: true,
+                          //padding: const EdgeInsets.only(left: 40),
+                          onPressed: () => {_submit(Buttons.GoogleDark)},
+                        )),
+                  ],
+                ),
           //),
         ),
       ),

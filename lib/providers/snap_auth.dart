@@ -36,52 +36,72 @@ class SnapAuth with ChangeNotifier {
     return _userId;
   }
 
-  Future<void> _authenticateFacebook() async {
+  Future _authenticateFacebook() async {
+    var msg = 'successfully authenticated';
     try {
-      final res = await fb.logIn(permissions: [
+      await fb.logIn(permissions: [
         FacebookPermission.publicProfile,
         FacebookPermission.email
-      ]);
-      // final responseData = json.decode(response.body);
-      // if (responseData['error'] != null) {
-      //   throw HttpException(responseData['error']['message']);
-      // }
+      ]).then((res) async {
+        // final responseData = json.decode(response.body);
+        // if (responseData['error'] != null) {
+        //   throw HttpException(responseData['error']['message']);
+        // }
 
-      switch (res.status) {
-        case FacebookLoginStatus.Success:
-          print('it worked!');
-          // get the token
-          final FacebookAccessToken fbToken = res.accessToken;
+        switch (res.status) {
+          case FacebookLoginStatus.Success:
+            print('it worked!');
+            // get the token
+            final FacebookAccessToken fbToken = res.accessToken;
 
-          // Convert to Auth Credential
-          final AuthCredential credential =
-              FacebookAuthProvider.credential(fbToken.token);
-          // User Credential to Sign in with Firebase
-          final result = await authService.signInWithCredential(credential);
-          _token = fbToken.token;
-          _userId = fbToken.userId;
-          print(
-              '${result.user.displayName} is now logged in. user id: ${fbToken.userId}');
+            // Convert to Auth Credential
+            final AuthCredential credential =
+                FacebookAuthProvider.credential(fbToken.token);
+            // User Credential to Sign in with Firebase
 
-          break;
-        case FacebookLoginStatus.Cancel:
-          print('login canceled');
-          break;
-        case FacebookLoginStatus.Error:
-          print('there was an error');
-          break;
-      }
+            await authService
+                .signInWithCredential(credential)
+                .then((result) async {
+              final User user = result.user;
+
+              assert(!user.isAnonymous);
+              assert(await user.getIdToken() != null);
+
+              _token = (await user.getIdToken());
+              authService.currentUser.listen((currentUser) {
+                if (currentUser != null) {
+                  _userId = currentUser.uid;
+                  print(
+                      '${result.user.displayName} is now logged in. user id: $_userId');
+                }
+              });
+            });
+
+            break;
+          case FacebookLoginStatus.Cancel:
+            msg = 'login canceled';
+            print('login canceled');
+            break;
+          case FacebookLoginStatus.Error:
+            msg = 'there was an error';
+            print('there was an error');
+            break;
+        }
+      });
       //_token = responseData['idToken'];
       //_userId =
 
       //_autoLogout();
       notifyListeners();
+    } on FirebaseAuthException catch (e) {
+      return e.message;
     } catch (error) {
-      throw error;
+      return error.toString();
     }
+    return msg;
   }
 
-  Future<void> _authenticateGoogle() async {
+  Future _authenticateGoogle() async {
     try {
       GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
 
@@ -96,10 +116,43 @@ class SnapAuth with ChangeNotifier {
           accessToken: googleSignInAuthentication.accessToken);
 
       if (credential != null) {
-        final result = await authService.signInWithCredential(credential);
-        _token = googleSignInAuthentication.idToken;
-        _userId = googleSignInAccount.id;
-        print('${result.user.displayName} is now logged in. user id: $_userId');
+        await authService.signInWithCredential(credential).then((result) async {
+          //_token = googleSignInAuthentication.idToken;
+
+          final User user = result.user;
+
+          assert(!user.isAnonymous);
+          assert(await user.getIdToken() != null);
+
+          _token = (await user.getIdToken());
+          authService.currentUser.listen((currentUser) {
+            if (currentUser != null) {
+              _userId = currentUser.uid;
+              print(
+                  '${result.user.displayName} is now logged in. user id: $_userId');
+            }
+          });
+
+          //final User currentUser = authService.currentUser as User;
+
+          //await DatabaseServices(uid: currentUser.uid).updateUserBio(bio);
+          //assert(user.uid == currentUser.uid);
+
+          // email = currentUser.email;
+          // name = currentUser.displayName;
+          // photo = currentUser.photoUrl;
+
+          //final user = FirebaseAuth.instance.currentUser;
+          //final loggedInIdToken = await user.getIdToken();
+          //user.uid;
+          // _userId = user.uid;
+          //loggedInIdToken;
+
+          //final idToken = await user.getIdToken();
+          //final token = idToken.token;
+
+          // _userId = result.user.uid;
+        });
       }
 
       //_token = responseData['idToken'];
@@ -108,16 +161,16 @@ class SnapAuth with ChangeNotifier {
       //_autoLogout();
       notifyListeners();
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 
   Future<void> loginFb() async {
-    _authenticateFacebook();
+    await _authenticateFacebook();
   }
 
   Future<void> loginGoogle() async {
-    _authenticateGoogle();
+    await _authenticateGoogle();
   }
 
   Future<void> logout() async {

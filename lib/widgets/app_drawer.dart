@@ -6,6 +6,10 @@ import '../screens/user_projects_screen.dart';
 import '../providers/snap_auth.dart';
 
 class AppDrawer extends StatelessWidget {
+  //final SnapAuth snapAuth;
+  final bool isAdmin;
+
+  AppDrawer(this.isAdmin);
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -67,13 +71,19 @@ class AppDrawer extends StatelessWidget {
           //Divider(),
           ListTile(
             leading: Icon(Icons.cloud_upload),
-            title: Text(
-              'Manage Projects',
-              style: TextStyle(fontSize: 14, color: Colors.purple),
-            ),
+            title: isAdmin
+                ? Text('Manage Projects',
+                    style: TextStyle(fontSize: 14, color: Colors.purple))
+                : Text('Manage Projects (disabled)',
+                    style: TextStyle(color: Colors.grey)),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(UserProjectsScreen.routeName);
+              if (isAdmin) {
+                Navigator.of(context)
+                    .pushReplacementNamed(UserProjectsScreen.routeName);
+              }
+
+              //Navigator.of(context)
+              //    .pushReplacementNamed(UserProjectsScreen.routeName);
             },
           ),
           //Divider(),

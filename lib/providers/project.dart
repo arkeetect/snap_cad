@@ -102,14 +102,15 @@ class Project with ChangeNotifier {
     }
   }
 
-  Future<void> checkFavoriteFromPerfs() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> favs = prefs.getStringList("favorites");
-    if (favs != null) {
-      if (favs.contains(this.id)) {
-        isFavorite = true;
+  checkFavoriteFromPerfs() {
+    SharedPreferences.getInstance().then((prefs) {
+      List<String> favs = prefs.getStringList("favorites");
+      if (favs != null) {
+        if (favs.contains(this.id)) {
+          isFavorite = true;
+        }
       }
-    }
+    });
   }
 
   Future<void> toggleFavorite(String token, String userId) async {

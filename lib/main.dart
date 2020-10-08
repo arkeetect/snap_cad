@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_cad/screens/project_video_play.dart';
@@ -64,13 +65,15 @@ class MyApp extends StatelessWidget {
                     accentColor: Colors.deepOrange,
                     fontFamily: 'Lato',
                   ),
-                  home: auth.isAuth ? ProjectsOverviewScreen() : AuthScreen(),
+                  home:
+                      auth.isAuth ? ProjectsOverviewScreen(auth) : AuthScreen(),
                   routes: {
                     ProjectDetailScreen.routeName: (ctx) =>
                         ProjectDetailScreen(),
                     CartScreen.routeName: (ctx) => CartScreen(),
                     OrdersScreen.routeName: (ctx) => OrdersScreen(),
-                    UserProjectsScreen.routeName: (ctx) => UserProjectsScreen(),
+                    UserProjectsScreen.routeName: (ctx) =>
+                        UserProjectsScreen(true),
                     EditProjectScreen.routeName: (ctx) => EditProjectScreen(),
                     ProjectVideoScreen.routeName: (ctx) => ProjectVideoScreen(),
                   },

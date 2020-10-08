@@ -7,11 +7,13 @@ import '../widgets/app_drawer.dart';
 import 'edit_project_screen.dart';
 
 class UserProjectsScreen extends StatelessWidget {
+  final bool isAdmin;
   static const routeName = '/user-products';
 
+  UserProjectsScreen(this.isAdmin);
+
   Future<void> _refreshProjects(BuildContext context) async {
-    await Provider.of<Projects>(context, listen: false)
-        .fetchAndSetProjects(true);
+    await Provider.of<Projects>(context, listen: false).fetchProjectsApi(true);
   }
 
   @override
@@ -33,7 +35,7 @@ class UserProjectsScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(isAdmin),
       body: FutureBuilder(
         future: _refreshProjects(context),
         builder: (ctx, snapshot) =>
