@@ -1,6 +1,8 @@
+//import 'dart:html';
 import 'dart:math' show pi;
 
 import 'package:flutter/material.dart';
+//import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
@@ -179,20 +181,6 @@ class _AuthCardState extends State<AuthCard>
     }
   }
 
-  // void _switchAuthMode() {
-  //   if (_authMode == AuthMode.Login) {
-  //     setState(() {
-  //       _authMode = AuthMode.Signup;
-  //     });
-  //     _controller.forward();
-  //   } else {
-  //     setState(() {
-  //       _authMode = AuthMode.Login;
-  //     });
-  //     _controller.reverse();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -209,7 +197,7 @@ class _AuthCardState extends State<AuthCard>
           image: DecorationImage(
               //padding:
               image: AssetImage("assets/images/lamp.jpg"),
-              scale: 5.5,
+              scale: 5.6,
               fit: BoxFit.none,
               alignment: Alignment.topLeft),
         ),
@@ -220,13 +208,14 @@ class _AuthCardState extends State<AuthCard>
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 100),
         width: deviceSize.width * 0.77,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.only(right: 1.0, left: 76.0),
         child: Form(
           key: _formKey,
           child: _isLoading
               ? CircularProgressIndicator()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  //crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     // SizedBox(
                     //   height: 9,
@@ -234,20 +223,23 @@ class _AuthCardState extends State<AuthCard>
                     // if (_isLoading)
                     //   CircularProgressIndicator()
                     // else
-                    Container(
-                        alignment: Alignment.topRight,
-                        margin: EdgeInsets.only(right: 6.0, top: 3.0),
-                        padding: EdgeInsets.zero,
+                    SizedBox(
+                        width: deviceSize.width * 0.54,
+                        //constraints: BoxConstraints(minWidth: de,
+                        //alignment: Alignment.topRight,
+                        //margin: EdgeInsets.only(right: 1.0, top: 3.0),
+                        //padding: EdgeInsets.zero,
                         child: SignInButton(
                           Buttons.Facebook,
                           //mini: true,
                           //padding: const EdgeInsets.only(left: 40),
                           onPressed: () => {_submit(Buttons.Facebook)},
                         )),
-                    Container(
-                        alignment: Alignment.topRight,
-                        margin: EdgeInsets.only(right: 6.0),
-                        padding: EdgeInsets.zero,
+                    SizedBox(
+                        width: deviceSize.width * 0.54,
+                        //alignment: Alignment.topRight,
+                        //margin: EdgeInsets.only(right: 6.0),
+                        //padding: EdgeInsets.zero,
                         child: SignInButton(
                           Buttons.GoogleDark,
                           //mini: true,
